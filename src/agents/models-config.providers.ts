@@ -143,7 +143,10 @@ export function normalizeProviders(params: {
         provider: normalizedKey,
         store: authStore,
       });
-      const apiKey = fromEnv ?? fromProfiles;
+      const apiKey =
+        fromEnv ??
+        fromProfiles ??
+        (normalizedKey === "amazon-bedrock" ? "AWS_PROFILE" : undefined);
       if (apiKey?.trim()) {
         mutated = true;
         normalizedProvider = { ...normalizedProvider, apiKey };

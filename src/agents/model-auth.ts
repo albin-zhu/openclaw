@@ -36,6 +36,7 @@ export async function resolveApiKeyForProvider(params: {
 }): Promise<{ apiKey: string; profileId?: string; source: string }> {
   const { provider, cfg, profileId, preferredProfile } = params;
   const store = params.store ?? ensureAuthProfileStore(params.agentDir);
+  const normalized = normalizeProviderId(provider);
 
   if (profileId) {
     const resolved = await resolveApiKeyForProfile({
@@ -88,6 +89,10 @@ export async function resolveApiKeyForProvider(params: {
     return { apiKey: customKey, source: "models.json" };
   }
 
+  if (normalized === "amazon-bedrock") {
+    return { apiKey: "<authenticated>", source: "aws-sdk" };
+  }
+
   if (provider === "openai") {
     const hasCodex = listProfilesForProvider(store, "openai-codex").length > 0;
     if (hasCodex) {
@@ -120,6 +125,12 @@ export function resolveEnvApiKey(provider: string): EnvApiKeyResult | null {
     const source = applied.has(envVar) ? `shell env: ${envVar}` : `env: ${envVar}`;
     return { apiKey: value, source };
   };
+  const pickPresent = (envVar: string): EnvApiKeyResult | null => {
+    const value = process.env[envVar]?.trim();
+    if (!value) return null;
+    const source = applied.has(envVar) ? `shell env: ${envVar}` : `env: ${envVar}`;
+    return { apiKey: "<authenticated>", source };
+  };
 
   if (normalized === "github-copilot") {
     return pick("COPILOT_GITHUB_TOKEN") ?? pick("GH_TOKEN") ?? pick("GITHUB_TOKEN");
@@ -141,6 +152,21 @@ export function resolveEnvApiKey(provider: string): EnvApiKeyResult | null {
     const envKey = getEnvApiKey(normalized);
     if (!envKey) return null;
     return { apiKey: envKey, source: "gcloud adc" };
+  }
+
+  if (normalized === "amazon-bedrock") {
+    return (
+      pickPresent("AWS_BEARER_TOKEN_BEDROCK") ??
+      pickPresent("AWS_PROFILE") ??
+      (process.env.AWS_ACCESS_KEY_ID?.trim() && process.env.AWS_SECRET_ACCESS_KEY?.trim()
+        ? {
+            apiKey: "<authenticated>",
+            source: applied.has("AWS_ACCESS_KEY_ID")
+              ? "shell env: AWS_ACCESS_KEY_ID"
+              : "env: AWS_ACCESS_KEY_ID",
+          }
+        : null)
+    );
   }
 
   if (normalized === "opencode") {

@@ -280,4 +280,94 @@ describe("getApiKeyForModel", () => {
       }
     }
   });
+
+  it("accepts AWS profile auth for amazon-bedrock", async () => {
+    const previousProfile = process.env.AWS_PROFILE;
+    const previousAccess = process.env.AWS_ACCESS_KEY_ID;
+    const previousSecret = process.env.AWS_SECRET_ACCESS_KEY;
+    const previousBearer = process.env.AWS_BEARER_TOKEN_BEDROCK;
+
+    try {
+      process.env.AWS_PROFILE = "bedrock-test";
+      delete process.env.AWS_ACCESS_KEY_ID;
+      delete process.env.AWS_SECRET_ACCESS_KEY;
+      delete process.env.AWS_BEARER_TOKEN_BEDROCK;
+
+      vi.resetModules();
+      const { resolveApiKeyForProvider } = await import("./model-auth.js");
+
+      const resolved = await resolveApiKeyForProvider({
+        provider: "amazon-bedrock",
+        store: { version: 1, profiles: {} },
+      });
+      expect(resolved.apiKey).toBe("<authenticated>");
+      expect(resolved.source).toContain("AWS_PROFILE");
+    } finally {
+      if (previousProfile === undefined) {
+        delete process.env.AWS_PROFILE;
+      } else {
+        process.env.AWS_PROFILE = previousProfile;
+      }
+      if (previousAccess === undefined) {
+        delete process.env.AWS_ACCESS_KEY_ID;
+      } else {
+        process.env.AWS_ACCESS_KEY_ID = previousAccess;
+      }
+      if (previousSecret === undefined) {
+        delete process.env.AWS_SECRET_ACCESS_KEY;
+      } else {
+        process.env.AWS_SECRET_ACCESS_KEY = previousSecret;
+      }
+      if (previousBearer === undefined) {
+        delete process.env.AWS_BEARER_TOKEN_BEDROCK;
+      } else {
+        process.env.AWS_BEARER_TOKEN_BEDROCK = previousBearer;
+      }
+    }
+  });
+
+  it("allows amazon-bedrock without an API key", async () => {
+    const previousProfile = process.env.AWS_PROFILE;
+    const previousAccess = process.env.AWS_ACCESS_KEY_ID;
+    const previousSecret = process.env.AWS_SECRET_ACCESS_KEY;
+    const previousBearer = process.env.AWS_BEARER_TOKEN_BEDROCK;
+
+    try {
+      delete process.env.AWS_PROFILE;
+      delete process.env.AWS_ACCESS_KEY_ID;
+      delete process.env.AWS_SECRET_ACCESS_KEY;
+      delete process.env.AWS_BEARER_TOKEN_BEDROCK;
+
+      vi.resetModules();
+      const { resolveApiKeyForProvider } = await import("./model-auth.js");
+
+      const resolved = await resolveApiKeyForProvider({
+        provider: "amazon-bedrock",
+        store: { version: 1, profiles: {} },
+      });
+      expect(resolved.apiKey).toBe("<authenticated>");
+      expect(resolved.source).toBe("aws-sdk");
+    } finally {
+      if (previousProfile === undefined) {
+        delete process.env.AWS_PROFILE;
+      } else {
+        process.env.AWS_PROFILE = previousProfile;
+      }
+      if (previousAccess === undefined) {
+        delete process.env.AWS_ACCESS_KEY_ID;
+      } else {
+        process.env.AWS_ACCESS_KEY_ID = previousAccess;
+      }
+      if (previousSecret === undefined) {
+        delete process.env.AWS_SECRET_ACCESS_KEY;
+      } else {
+        process.env.AWS_SECRET_ACCESS_KEY = previousSecret;
+      }
+      if (previousBearer === undefined) {
+        delete process.env.AWS_BEARER_TOKEN_BEDROCK;
+      } else {
+        process.env.AWS_BEARER_TOKEN_BEDROCK = previousBearer;
+      }
+    }
+  });
 });

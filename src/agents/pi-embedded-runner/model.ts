@@ -40,9 +40,9 @@ export function resolveModel(
     const providers = cfg?.models?.providers ?? {};
     const inlineModels =
       providers[provider]?.models?.map((entry) => ({ ...entry, provider })) ??
-      Object.values(providers)
-        .flatMap((entry) => entry?.models ?? [])
-        .map((entry) => ({ ...entry, provider }));
+      Object.entries(providers).flatMap(([providerId, entry]) =>
+        (entry?.models ?? []).map((modelEntry) => ({ ...modelEntry, provider: providerId })),
+      );
     const inlineMatch = inlineModels.find((entry) => entry.id === modelId);
     if (inlineMatch) {
       const normalized = normalizeModelCompat(inlineMatch as Model<Api>);
