@@ -9,8 +9,10 @@ import ai.openclaw.android.protocol.OpenClawLocationCommand
 import ai.openclaw.android.protocol.OpenClawNotificationsCommand
 import ai.openclaw.android.protocol.OpenClawScreenCommand
 import ai.openclaw.android.protocol.OpenClawSmsCommand
+import android.content.Context
 
 class InvokeDispatcher(
+  private val context: Context,
   private val canvas: CanvasController,
   private val cameraHandler: CameraHandler,
   private val locationHandler: LocationHandler,
@@ -30,6 +32,8 @@ class InvokeDispatcher(
   private val onCanvasA2uiPush: () -> Unit,
   private val onCanvasA2uiReset: () -> Unit,
 ) {
+  private val uiAutomationHandler = UiAutomationHandler(context)
+
   suspend fun handleInvoke(command: String, paramsJson: String?): GatewaySession.InvokeResult {
     val spec =
       InvokeCommandRegistry.find(command)
@@ -142,6 +146,15 @@ class InvokeDispatcher(
 
       // App update
       "app.update" -> appUpdateHandler.handleUpdate(paramsJson)
+
+      // UI Automation commands
+      "ui.hierarchy", "ui.click", "ui.clickByText", "ui.longClickByText",
+      "ui.input", "ui.swipe", "ui.scroll", "ui.back", "ui.home",
+      "ui.recents", "ui.notifications", "ui.quickSettings", "ui.currentApp",
+      "ui.find", "ui.openApp", "ui.openUrl", "ui.getScreenSize", "ui.performGesture" -> {
+        val result = uiAutomationHandler.handleCommand(command, paramsJson)
+        GatewaySession.InvokeResult.ok(result.toString())
+      }
 
       else -> GatewaySession.InvokeResult.error(code = "INVALID_REQUEST", message = "INVALID_REQUEST: unknown command")
     }

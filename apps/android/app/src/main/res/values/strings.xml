@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">OpenClaw Node</string>
+    <string name="ui_automation_service_desc">OpenClaw UI Automation - Allows AI to control your phone screen and interact with apps</string>
+    <string name="ui_automation_service_label">OpenClaw UI Automation</string>
+    <string name="foreground_service_title">OpenClaw Node Service</string>
+    <string name="foreground_service_desc">Connected to Gateway for AI control</string>
 </resources>

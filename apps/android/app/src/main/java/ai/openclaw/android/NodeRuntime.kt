@@ -126,6 +126,7 @@ class NodeRuntime(context: Context) {
   )
 
   private val invokeDispatcher: InvokeDispatcher = InvokeDispatcher(
+    context = context,
     canvas = canvas,
     cameraHandler = cameraHandler,
     locationHandler = locationHandler,

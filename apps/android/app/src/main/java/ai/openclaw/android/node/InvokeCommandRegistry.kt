@@ -112,6 +112,26 @@ object InvokeCommandRegistry {
         availability = InvokeCommandAvailability.DebugBuild,
       ),
       InvokeCommandSpec(name = "app.update"),
+
+      // UI Automation commands
+      InvokeCommandSpec(name = "ui.hierarchy"),
+      InvokeCommandSpec(name = "ui.click"),
+      InvokeCommandSpec(name = "ui.clickByText"),
+      InvokeCommandSpec(name = "ui.longClickByText"),
+      InvokeCommandSpec(name = "ui.input"),
+      InvokeCommandSpec(name = "ui.swipe"),
+      InvokeCommandSpec(name = "ui.scroll"),
+      InvokeCommandSpec(name = "ui.back"),
+      InvokeCommandSpec(name = "ui.home"),
+      InvokeCommandSpec(name = "ui.recents"),
+      InvokeCommandSpec(name = "ui.notifications"),
+      InvokeCommandSpec(name = "ui.quickSettings"),
+      InvokeCommandSpec(name = "ui.currentApp"),
+      InvokeCommandSpec(name = "ui.find"),
+      InvokeCommandSpec(name = "ui.openApp"),
+      InvokeCommandSpec(name = "ui.openUrl"),
+      InvokeCommandSpec(name = "ui.getScreenSize"),
+      InvokeCommandSpec(name = "ui.performGesture"),
     )
 
   private val byNameInternal: Map<String, InvokeCommandSpec> = all.associateBy { it.name }
