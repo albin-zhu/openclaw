@@ -16,7 +16,7 @@ updates:
     schedule:
       interval: weekly
     cooldown:
-      default-days: 7
+      default-days: 2
     groups:
       production:
         dependency-type: production
@@ -38,7 +38,7 @@ updates:
     schedule:
       interval: weekly
     cooldown:
-      default-days: 7
+      default-days: 2
     groups:
       actions:
         patterns:
@@ -54,7 +54,7 @@ updates:
     schedule:
       interval: weekly
     cooldown:
-      default-days: 7
+      default-days: 2
     groups:
       swift-deps:
         patterns:
@@ -70,7 +70,7 @@ updates:
     schedule:
       interval: weekly
     cooldown:
-      default-days: 7
+      default-days: 2
     groups:
       swift-deps:
         patterns:
@@ -86,7 +86,7 @@ updates:
     schedule:
       interval: weekly
     cooldown:
-      default-days: 7
+      default-days: 2
     groups:
       swift-deps:
         patterns:
@@ -102,7 +102,7 @@ updates:
     schedule:
       interval: weekly
     cooldown:
-      default-days: 7
+      default-days: 2
     groups:
       android-deps:
         patterns:
@@ -118,7 +118,7 @@ updates:
     schedule:
       interval: weekly
     cooldown:
-      default-days: 7
+      default-days: 2
     groups:
       docker-images:
         patterns:
