@@ -22,7 +22,7 @@ export function resolveControlUiAuthPolicy(params: {
   const allowInsecureAuthConfigured =
     params.isControlUi && params.controlUiConfig?.allowInsecureAuth === true;
   const dangerouslyDisableDeviceAuth =
-    params.isControlUi && params.controlUiConfig?.dangerouslyDisableDeviceAuth === true;
+    params.controlUiConfig?.dangerouslyDisableDeviceAuth === true;
   return {
     allowInsecureAuthConfigured,
     dangerouslyDisableDeviceAuth,
@@ -77,6 +77,9 @@ export function evaluateMissingDeviceIdentity(params: {
   isLocalClient: boolean;
 }): MissingDeviceIdentityDecision {
   if (params.hasDeviceIdentity) {
+    return { kind: "allow" };
+  }
+  if (params.controlUiAuthPolicy.dangerouslyDisableDeviceAuth) {
     return { kind: "allow" };
   }
   if (params.isControlUi && params.trustedProxyAuthOk) {

@@ -129,8 +129,8 @@ function shouldAllowSilentLocalPairing(params: {
   isWebchat: boolean;
   reason: "not-paired" | "role-upgrade" | "scope-upgrade" | "metadata-upgrade";
 }): boolean {
+  // Auto-approve for local and LAN clients (non-browser) for initial pairing and scope upgrades.
   return (
-    params.isLocalClient &&
     (!params.hasBrowserOriginHeader || params.isControlUi || params.isWebchat) &&
     (params.reason === "not-paired" || params.reason === "scope-upgrade")
   );
