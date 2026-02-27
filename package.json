@@ -228,14 +228,11 @@
     "vitest": "^4.0.18"
   },
   "peerDependencies": {
-    "@discordjs/opus": "^0.10.0",
     "@napi-rs/canvas": "^0.1.89",
     "node-llama-cpp": "3.16.2"
   },
-  "peerDependenciesMeta": {
-    "@discordjs/opus": {
-      "optional": true
-    }
+  "optionalDependencies": {
+    "@discordjs/opus": "^0.10.0"
   },
   "engines": {
     "node": ">=22.12.0"
